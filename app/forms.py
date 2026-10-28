@@ -2,8 +2,7 @@
 from flask_wtf import FlaskForm
 from wtforms import BooleanField, FloatField, StringField, SubmitField
 from wtforms.validators import DataRequired, Length, NumberRange
-
-
+from flask_wtf.file import FileField, FileAllowed
 class ProductoForm(FlaskForm):
     nombre = StringField(
         "Nombre del Producto",
@@ -21,5 +20,13 @@ class ProductoForm(FlaskForm):
             NumberRange(min=0.01, message="El precio debe ser mayor que 0."),
         ],
     )
+    
     disponible = BooleanField("Disponible en stock", default=True)
+    imagen = FileField(
+        "Imagen del Producto",
+        validators=[
+            FileAllowed(['jpg','jpeg','png','webp'], "Solo se permiten imagenes (JPG, PNG, WEBP)")
+            
+        ]
+    )
     submit = SubmitField("Guardar Producto")
