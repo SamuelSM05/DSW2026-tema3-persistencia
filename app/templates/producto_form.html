@@ -14,7 +14,7 @@
         {{ form.nombre.label }}<br>
         {{ form.nombre(size=40) }}<br>
         {% for error in form.nombre.errors %}
-        <span style="color: red;">{{ error }}</span>
+            <span style="color: red;">{{ error }}</span>
         {% endfor %}
     </div>
 
@@ -22,23 +22,33 @@
         {{ form.precio.label }}<br>
         {{ form.precio() }}<br>
         {% for error in form.precio.errors %}
-        <span style="color: red;">{{ error }}</span>
+            <span style="color: red;">{{ error }}</span>
         {% endfor %}
     </div>
 
     <div style="margin-bottom: 15px;">
         {{ form.disponible() }} {{ form.disponible.label }}
     </div>
+
     <div style="margin-bottom: 15px;">
-        {{ form.imagen.label }}
-        {{ form.imagen() }}
-        {% for error in form.imagen.errors %}
-        <span style="color: red;">{{ error }}</span>
+        {{ form.archivo_imagen.label }}
+        {% if producto and producto.imagen %}
+        <img src="{{ url_for('static', filename='img/uploads/' + producto.imagen)}}"width =100px alt="{{ producto.nombre }}">
+        {% else %}
+        <span>(No hay imagen)</span>
+        {% endif %}
+        <span>Sube un archivo si quieres subir una imagen</span>
+        {{ form.archivo_imagen() }}
+        {% for error in form.archivo_imagen.errors %}
+            <span style="color: red;">{{ error }}</span>
         {% endfor %}
+
     </div>
+
     <div>
         {{ form.submit() }}
         <a href="{{ url_for('mostrar_catalogo') }}" style="margin-left: 10px;">Cancelar</a>
     </div>
+    
 </form>
 {% endblock %}
