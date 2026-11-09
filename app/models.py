@@ -1,10 +1,15 @@
-from flask_login import UserMixin
+from flask_login import LoginManager, UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import Mapped, mapped_column
 from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
+# 1. Instanciamos las extensiones sin pasarles 'app' para evitar importaciones circulares
+login_manager = LoginManager()
+login_manager.login_view = "auth.login"  # Apunta a la vista 'login' dentro del Blueprint 'auth'
+login_manager.login_message = "Por favor, inicia sesión para acceder a esta sección."
+login_manager.login_message_category = "info"
 class Producto(db.Model):
     __tablename__ = "productos"
 
@@ -41,3 +46,8 @@ class Usuario(db.Model, UserMixin):
 
     def __repr__(self) -> str:
         return f"Usuario id={self.id}: {self.username} ({self.rol})"
+    
+# 2. El cargador de usuario vive junto al modelo Usuario
+@login_manager.user_loader
+def cargar_usuario(user_id):
+    return db.session.get(Usuario, int(user_id))
